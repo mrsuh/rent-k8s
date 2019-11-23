@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: parser
+spec:
+    selector:
+        matchLabels:
+            app: parser
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                app: parser
+        spec:
+            containers:
+                -   name: parser
+                    image: mrsuh/rent-parser:1.0.0
+                    ports:
+                        -   containerPort: 9080

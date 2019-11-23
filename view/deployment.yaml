@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: view
+spec:
+    selector:
+        matchLabels:
+            app: view
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                app: view
+        spec:
+            volumes:
+                -   name: view-static
+                    emptyDir: {}
+                -   name: view-configmap
+                    configMap:
+                        name: view-configmap-1.0.0
+            containers:
+                -   name: nginx
+                    image: mrsuh/rent-nginx:1.0.0
+                    ports:
+                        -   containerPort: 80
+                    volumeMounts:
+                        -   name: view-configmap
+                            mountPath: /etc/nginx/conf.d/default.conf
+                            subPath: default.conf
+                        -   name: view-static
+                            mountPath: /var/www/html
+                -   name: view
+                    image: mrsuh/rent-view:1.1.0
+                    ports:
+                        -   containerPort: 9070
+                    env:
+                        -   name: 'LISTEN_HOST'
+                            value: '0.0.0.0'
+                        -   name: 'LISTEN_PORT'
+                            value: '9070'
+                        -   name: 'DATABASE_URL'
+                            value: 'mongodb://mongodb/rent-collector'
+                    volumeMounts:
+                        -   name: view-static
+                            mountPath: /var/www/html
+                    lifecycle:
+                        postStart:
+                            exec:
+                                command: ["/bin/sh", "-c", "cp -r /app/web/. /var/www/html"]

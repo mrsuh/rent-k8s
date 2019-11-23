@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: queue
+spec:
+    selector:
+        matchLabels:
+            app: queue
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                app: queue
+        spec:
+            containers:
+                -   name: queue
+                    image: schickling/beanstalkd
+                    ports:
+                        -   containerPort: 11300
+

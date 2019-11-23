@@ -1,0 +1,53 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+    name: collector-cron-explore
+spec:
+    schedule: "0 4 * * *"
+    jobTemplate:
+        spec:
+            template:
+                spec:
+                    restartPolicy: Never
+                    containers:
+                        -   name: collect-sankt-peterburg
+                            image: mrsuh/rent-collector:1.3.1
+                            envFrom:
+                                -   configMapRef:
+                                        name: collector-configmap-1.1.0
+                                -   secretRef:
+                                        name: collector-secrets-1.0.0
+                            volumeMounts:
+                                -   name: collector-persistent-storage
+                                    mountPath: /tokenStorage
+                            command: ["php"]
+                            args: [
+                                "bin/console","app:explore",
+                                "--city=sankt-peterburg", "--valid-period=2 weeks", "--search-query=снять квартиру спб", "--max-valid-results=80",
+                                "--city=sankt-peterburg", "--valid-period=2 weeks", "--search-query=уютное гнездышко спб", "--max-valid-results=2",
+                                "--city=moskva", "--valid-period=2 weeks", "--search-query=снять квартиру москва", "--max-valid-results=80",
+                                "--city=moskva", "--valid-period=2 weeks", "--search-query=уютное гнездышко москва", "--max-valid-results=2",
+                                "--city=novosibirsk", "--valid-period=2 weeks", "--search-query=снять квартиру новосибирск", "--max-valid-results=40",
+                                "--city=ekaterinburg", "--valid-period=2 weeks", "--search-query=снять квартиру екатеринбург", "--max-valid-results=40",
+                                "--city=nizhny-novgorod", "--valid-period=2 weeks", "--search-query=снять квартиру нижний новгород", "--max-valid-results=40",
+                                "--city=kazan", "--valid-period=2 weeks", "--search-query=снять квартиру казань", "--max-valid-results=40",
+                                "--city=chelyabinsk", "--valid-period=2 weeks", "--search-query=снять квартиру челябинск", "--max-valid-results=40",
+                                "--city=omsk", "--valid-period=2 weeks", "--search-query=снять квартиру омск", "--max-valid-results=40",
+                                "--city=samara", "--valid-period=2 weeks", "--search-query=снять квартиру самара", "--max-valid-results=40",
+                                "--city=rostov-na-donu", "--valid-period=2 weeks", "--search-query=снять квартиру ростов-на-дону", "--max-valid-results=40",
+                                "--city=ufa", "--valid-period=2 weeks", "--search-query=снять квартиру уфа", "--max-valid-results=40",
+                                "--city=krasnoyarsk", "--valid-period=2 weeks", "--search-query=снять квартиру красноярск", "--max-valid-results=40",
+                                "--city=perm", "--valid-period=2 weeks", "--search-query=снять квартиру пермь", "--max-valid-results=40",
+                                "--city=voronezh", "--valid-period=2 weeks", "--search-query=снять квартиру воронеж", "--max-valid-results=40",
+                                "--city=volgograd", "--valid-period=2 weeks", "--search-query=снять квартиру волгоград", "--max-valid-results=40",
+                                "--city=krasnodar", "--valid-period=2 weeks", "--search-query=снять квартиру краснодар", "--max-valid-results=40",
+                                "--city=saratov", "--valid-period=2 weeks", "--search-query=снять квартиру саратов", "--max-valid-results=40",
+                                "--city=tumen", "--valid-period=2 weeks", "--search-query=снять квартиру тюмень", "--max-valid-results=40",
+                                "--city=togliatti", "--valid-period=2 weeks", "--search-query=снять квартиру тольятти", "--max-valid-results=40",
+                                "--city=taganrog", "--valid-period=2 weeks", "--search-query=снять квартиру таганрог", "--max-valid-results=40",
+                                "--city=tobolsk", "--valid-period=2 weeks", "--search-query=снять квартиру тобольск", "--max-valid-results=40",
+                            ]
+                    volumes:
+                        -   name: collector-persistent-storage
+                            persistentVolumeClaim:
+                                claimName: collector-pv-claim

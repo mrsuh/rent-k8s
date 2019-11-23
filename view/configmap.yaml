@@ -1,0 +1,26 @@
+apiVersion: v1
+data:
+    default.conf: "proxy_cache_path /dev/shm levels=1:2 keys_zone=rent_view_proxy:10m
+    use_temp_path=off;\nlimit_req_zone $binary_remote_addr zone=rent_view_limit:10m
+    rate=10r/s;\nlimit_conn_zone $binary_remote_addr zone=rent_view_limit_ip:10m;\n\nserver
+    {\n\n    listen 80 default_server;\n\n    root /var/www/html;\n\n    gzip on;\n
+    \   gzip_disable \"msie6\";\n    gzip_types text/plain text/css application/json
+    application/x-javascript text/xml application/xml application/xml+rss text/javascript
+    application/javascript image/png image/svg+xml;\n    gzip_comp_level 5;\n\n    proxy_buffering
+    \ on;\n    proxy_cache_lock on;\n\n    limit_conn rent_view_limit_ip 100;\n    limit_conn_log_level
+    error;\n    limit_req zone=rent_view_limit burst=20 nodelay;\n    limit_req_log_level
+    error;\n\n    location / {\n\n        set $bypass \"\";\n        if ($is_args
+    = \"?\") {\n            set $bypass \"1\";\n        }\n\n        proxy_cache_bypass
+    $bypass;\n        proxy_cache rent_view_proxy;\n        proxy_cache_valid 200
+    1m;\n\t    proxy_pass http://127.0.0.1:9070;\n\t    proxy_read_timeout 10s;\n
+    \   }\n\n    location .*\\/statistic {\n        proxy_cache rent_view_proxy;\n
+    \       proxy_cache_valid 200 10m;\n        proxy_pass http://127.0.0.1:9070;\n\t
+    \   proxy_read_timeout 10s;\n    }\n\n    location /about {\n        proxy_cache
+    rent_view_proxy;\n        proxy_cache_valid 200 1d;\n        proxy_pass http://127.0.0.1:9070;\n\t
+    \   proxy_read_timeout 10s;\n    }\n\n    location ~* \\.(jpg|jpeg|gif|png|js|css|ico|avi|swf|ttf|woff|wsdl|xsd|txt|pdf|json|svg|html|mp4)$
+    {\n        access_log off;\n        expires max;\n    }\n\n    location ~ /\\.git$
+    { deny all; }\n\n    error_log /var/log/nginx/view.error.log;\n    access_log
+    /var/log/nginx/view.access.log;\n}"
+kind: ConfigMap
+metadata:
+    name: view-configmap-1.0.0

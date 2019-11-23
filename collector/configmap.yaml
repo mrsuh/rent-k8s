@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: collector-configmap-1.1.0
+data:
+    APP_ENV: prod
+    DATABASE_HOST: mongodb
+    DATABASE_NAME: rent-collector
+    DATABASE_PORT: "27017"
+    HTTP_CLIENT_CONNECT_TIMEOUT: "5"
+    HTTP_CLIENT_TIMEOUT: "5"
+    PARSER_URL: http://parser:9080
+    QUEUE_HOST: queue
+    QUEUE_PORT: "11300"
+    VK_APP_TOKEN_STORAGE_FILE_PATH: "/tokenStorage/vkApiToken.txt"

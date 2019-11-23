@@ -1,0 +1,28 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+    name: collector-cron-delete
+spec:
+    schedule: "0 1 * * *"
+    jobTemplate:
+        spec:
+            template:
+                spec:
+                    restartPolicy: Never
+                    containers:
+                        -   name: collect-sankt-peterburg
+                            image: mrsuh/rent-collector:1.3.1
+                            envFrom:
+                                -   configMapRef:
+                                        name: collector-configmap-1.1.0
+                                -   secretRef:
+                                        name: collector-secrets-1.0.0
+                            volumeMounts:
+                                -   name: collector-persistent-storage
+                                    mountPath: /tokenStorage
+                            command: ["php"]
+                            args: ["bin/console", "app:delete:by-expire-date", "--expire-period=2 weeks"]
+                    volumes:
+                        -   name: collector-persistent-storage
+                            persistentVolumeClaim:
+                                claimName: collector-pv-claim
