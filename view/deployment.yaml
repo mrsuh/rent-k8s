@@ -30,7 +30,7 @@ spec:
                         -   name: view-static
                             mountPath: /var/www/html
                 -   name: view
-                    image: mrsuh/rent-view:1.1.0
+                    image: mrsuh/rent-view:4.1.0
                     ports:
                         -   containerPort: 9070
                     env:
