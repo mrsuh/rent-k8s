@@ -14,6 +14,6 @@ spec:
         spec:
             containers:
                 -   name: parser
-                    image: mrsuh/rent-parser:1.0.0
+                    image: docker.io/mrsuh/rent-parser:1.0.0
                     ports:
                         -   containerPort: 9080

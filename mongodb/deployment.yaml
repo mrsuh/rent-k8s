@@ -1,11 +1,12 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
     name: mongodb
 spec:
     selector:
         matchLabels:
             app: mongodb
+    serviceName: mongodb
     template:
         metadata:
             labels:
@@ -13,7 +14,7 @@ spec:
         spec:
             containers:
                 -   name: mongodb
-                    image: mrsuh/rent-mongodb:1.1.0
+                    image: docker.io/mrsuh/rent-mongodb:1.1.0
                     ports:
                         -   containerPort: 27017
                     volumeMounts:

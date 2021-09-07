@@ -20,7 +20,7 @@ spec:
                         name: view-configmap-1.0.0
             containers:
                 -   name: nginx
-                    image: mrsuh/rent-nginx:1.0.0
+                    image: docker.io/mrsuh/rent-nginx:1.0.0
                     ports:
                         -   containerPort: 80
                     volumeMounts:
@@ -30,7 +30,7 @@ spec:
                         -   name: view-static
                             mountPath: /var/www/html
                 -   name: view
-                    image: mrsuh/rent-view:4.1.1
+                    image: docker.io/mrsuh/rent-view:4.1.1
                     ports:
                         -   containerPort: 9070
                     env:
